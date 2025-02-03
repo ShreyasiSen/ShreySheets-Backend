@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoute from './routes/userRoute.js';
 import spreadsheetRouter from './routes/spreadsheetRoute.js';
-import passwordRouter from './routes/passwordRoute.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
@@ -14,7 +13,6 @@ const connect = async () => {
     try {
         await mongoose.connect(process.env.MONGO, {
             useNewUrlParser: true,
-            useUnifiedTopology: true,
         });
         console.log('Connected to the database');
     } catch (error) {
@@ -46,15 +44,14 @@ const corsOptions = {
     maxAge: 86400 
 };
 
-
 app.use(cors(corsOptions));
 
 app.use(express.json());
 app.options('*', cors(corsOptions));
 app.use('/api', userRoute);
 app.use('/api', spreadsheetRouter);
-app.use('/api',passwordRouter);
-app.use(cookieParser(),);
+
+app.use(cookieParser());
 
 app.listen(8000, () => {
     connect();
