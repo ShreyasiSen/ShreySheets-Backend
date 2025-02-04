@@ -10,7 +10,7 @@ const sheetSchema = new mongoose.Schema({
         required: true,
     },
     data: {
-        type: [[{type: String, isBold: Boolean, isItalic: Boolean, fontSize: String, Color: String}]],
+        type: [[{value: String, isBold: Boolean, isItalic: Boolean}]],
         required: false,
     },
 });
