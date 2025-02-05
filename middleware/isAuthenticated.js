@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import User from '../models/user.js';
 
 const isAuthenticated = asyncHandler(async (req, res, next) => {
     console.log('Hi')

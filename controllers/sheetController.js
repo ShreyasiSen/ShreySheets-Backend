@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import User from '../models/user.js';
 import Sheet from '../models/sheet.js';
 
 export const createSheet = async (req, res) => {
