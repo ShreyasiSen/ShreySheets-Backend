@@ -21,7 +21,7 @@ const connect = async () => {
 };
 
 const allowedOrigins = [
-    'http://localhost:5173'
+    'http://localhost:5173','shrey-sheets-frontend.vercel.app'
 ];
 
 const corsOptions = { 
