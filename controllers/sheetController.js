@@ -8,11 +8,12 @@ export const createSheet = async (req, res) => {
         await newSheet.save();
         try{
             await User.findByIdAndUpdate(userId, { $push: { spreadsheets: newSheet._id } });
+            
+        res.status(201).json(newSheet);
         }
         catch(error){
             res.status(409).json({ message: error.message });
         }
-        res.status(201).json(newSheet);
     } catch (error) {
         res.status(409).json({ message: error.message });
     }       
@@ -43,6 +44,15 @@ export const updateSheet = async (req, res) => {
         res.status(200).json(updatedSheet);
     }
     catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+export const deleteSheet = async (req, res) => {
+    try {
+        await Sheet.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'Sheet deleted successfully' });
+    } catch (error) {
         res.status(404).json({ message: error.message });
     }
 }
