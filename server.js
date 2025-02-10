@@ -5,6 +5,7 @@ import userRoute from './routes/userRoute.js';
 import spreadsheetRouter from './routes/spreadsheetRoute.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import geminiRouter from './routes/geminiRoute.js';
 
 dotenv.config();
 const app = express();
@@ -52,6 +53,7 @@ app.use(express.json());
 app.options('*', cors(corsOptions));
 app.use('/api', userRoute);
 app.use('/api', spreadsheetRouter);
+app.use('/api', geminiRouter);
 
 app.use(cookieParser());
 
