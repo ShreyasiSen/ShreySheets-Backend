@@ -33,8 +33,8 @@ const geminiController = async (req, res) => {
         Instructions:
         1. If the user query involves finding the sum of a specific row, extract the row number and return it in the format SUMROW(row number).
         2. If the user query involves finding the sum of a specific column, extract the column number and return it in the format SUMCOL(column number).
-        3. If the user query involves finding the average value in a specific row, extract the row number and return it in the format AVERAGEROW(row number).
-        4. If the user query involves finding the average value in a specific column, extract the column number and return it in the format AVERAGECOL(column number).
+        3. If the user query involves finding the average value in a specific row, extract the row number and return it in the format AVGROW(row number).
+        4. If the user query involves finding the average value in a specific column, extract the column number and return it in the format AVGCOL(column number).
         5. If the user query involves finding the maximum value in a specific row, extract the row number and return it in the format MAXROW(row number).
         6. If the user query involves finding the maximum value in a specific column, extract the column number and return it in the format MAXCOL(column number).
         7. If the user query involves finding the minimum value in a specific row, extract the row number and return it in the format MINROW(row number).
@@ -47,11 +47,28 @@ const geminiController = async (req, res) => {
         User query: "${description}".
         Please provide the appropriate response based on the above instructions.`;
 
-        const result = await model.generateContent(prompt);
-        const output = await result.response.text();
+        async function generateWithRetry(prompt, retries = 3, delay = 3000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const result = await model.generateContent(prompt);
+                    return await result.response.text();
+                } catch (error) {
+                    if (error.status === 503 && i < retries - 1) {
+                        console.error(`Gemini API overloaded. Retrying in ${delay / 1000} seconds...`);
+                        await new Promise(res => setTimeout(res, delay));
+                    } else {
+                        throw error;
+                    }
+                }
+            }
+            throw new Error("Google AI API is unavailable after multiple retries.");
+        }
 
+        // Call the function with retry logic
+        const output = await generateWithRetry(prompt);
         console.log(output);
         res.json({ response: output });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred while generating content' });
